@@ -18,6 +18,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application as BaseApplication;
 use Illuminate\Foundation\PackageManifest;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Env;
 use Illuminate\Support\Str;
 use LaravelZero\Framework\Exceptions\ConsoleException;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
@@ -30,6 +31,16 @@ class Application extends BaseApplication
     public function buildsPath(string $path = ''): string
     {
         return $this->basePath('builds'.($path ? DIRECTORY_SEPARATOR.$path : $path));
+    }
+
+    public function userHomeDirectoryPath(string $path = ''): string
+    {
+        if ($directory = (Env::get('HOME') ?? Env::get('USERPROFILE') ?? false)) {
+            return $directory.($path ? DIRECTORY_SEPARATOR.$path : $path);
+        }
+
+        /** @phpstan-ignore-next-line */
+        $this->abort(5, 'Unable to find home directory path');
     }
 
     /**
