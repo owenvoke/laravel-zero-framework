@@ -36,3 +36,15 @@ it('can abort', function () {
     expect($consoleException->getMessage())->toEqual('Bar');
     expect($consoleException->getHeaders())->toEqual(['Foo' => 'Bar']);
 });
+
+it('can get the user home directory', function () {
+    expect(app()->userHomeDirectoryPath())->toBe(
+        windows_os() ? getenv('USERPROFILE') : getenv('HOME')
+    );
+});
+
+it('can get the user home directory with a path', function () {
+    expect(app()->userHomeDirectoryPath('test-path'))->toBe(
+        (windows_os() ? getenv('USERPROFILE') : getenv('HOME')).DIRECTORY_SEPARATOR.'test-path'
+    );
+});
